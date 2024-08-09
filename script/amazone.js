@@ -1,5 +1,6 @@
-import { cart } from "../data/cart.js";
+import { cart, addItem } from "../data/cart.js";
 import { products } from "../data/products.js";
+import {fixed} from './utlity/many.js'
 
 let prodectsHTML = '';
 
@@ -24,7 +25,7 @@ products.forEach((prodect)=>{
       </div>
 
       <div class="product-price">
-        $${(prodect.priceCents / 100).toFixed(2)}
+        $${fixed(prodect.priceCents)}
       </div>
 
       <div class="product-quantity-container">
@@ -62,33 +63,8 @@ document.querySelector('.js-products-grid').innerHTML=prodectsHTML;
 
 const addedMessageTimeouts = {};
 
-document.querySelectorAll('.js-add-to-cart').forEach( (button)=>{
-  button.addEventListener('click', ()=>{
-    
-    const prodectId= button.dataset.productId;
-
-    let matchingItem;
-
-    cart.forEach((item)=>{
-      if(prodectId === item.prodectId){
-        matchingItem=item;
-      }
-    });
-
-    const quantitySelector = document.querySelector(`
-    .js-quantity-selector-${prodectId}`);
-    const quantity =Number(quantitySelector.value);
-
-    if(matchingItem){
-      matchingItem.quantity += quantity;
-    }else{
-      cart.push({
-        prodectId,
-        quantity
-      });
-    };
-
-    let cartQuantity = 0;
+function updateItem(prodectId){
+  let cartQuantity = 0;
 
     cart.forEach((item)=>{
       cartQuantity += item.quantity;
@@ -112,5 +88,16 @@ document.querySelectorAll('.js-add-to-cart').forEach( (button)=>{
     }, 2000);
 
     addedMessageTimeouts[prodectId] = timeoutId;
+}
+
+
+
+document.querySelectorAll('.js-add-to-cart').forEach( (button)=>{
+  button.addEventListener('click', ()=>{
+    
+    const prodectId= button.dataset.productId;
+
+    addItem(prodectId);
+    updateItem(prodectId);
   });
 });
