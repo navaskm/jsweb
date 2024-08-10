@@ -95,7 +95,7 @@ cart.forEach((item) => {
   </div>
   `
 });
-console.log(selectItems);
+
 document.querySelector('.js-order-summary').innerHTML=selectItems;
 
 document.querySelectorAll('.js-delete-link').forEach((link)=>{
