@@ -47,4 +47,31 @@ export function removeFromcart(itemId){
 
   cart = newCart;
   saveToStorage();
-}
+};
+
+export function calculateCartQuantity(){
+  let cartQuantity=0;
+  cart.forEach((item)=>{
+   cartQuantity+=item.quantity;
+  });
+
+  return cartQuantity;
+};
+
+export function updateQuantity(productId, newQuantity){
+  let matchgItem;
+
+  cart.forEach((cartItem)=>{
+
+    if(newQuantity>=0 && newQuantity<=100){
+      if(productId === cartItem.prodectId){
+        matchgItem = cartItem;
+      }
+    }else{
+      alert('Quantity must be at least 0 and less than 1000');
+    }
+  });
+
+  matchgItem.quantity = newQuantity;
+  saveToStorage();
+};
