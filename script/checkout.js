@@ -1,12 +1,14 @@
 import { cart, removeFromcart, calculateCartQuantity, updateQuantity} from "../data/cart.js";
 import { products } from "../data/products.js";
 import { fixed } from "./utlity/many.js";
+import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+import { deliveryOptions } from "../data/deliveryoption.js";
 
 let selectItems = '';
 
 cart.forEach((item) => {
   let matchgItem;
-//111111111111111111111111111111111
+
   products.forEach((product)=>{
     if(item.prodectId === product.id){
       matchgItem=product
@@ -108,6 +110,40 @@ cart.forEach((item) => {
   </div>
   `
 });
+
+function deliveryOptionHTML(){
+
+  let html;
+
+  deliveryOptions.forEach((deliveryoption)=>{
+
+    //delivery date
+    const today =dayjs();
+    const delivertdate = today.add(deliveryOptions.       deliveryDays);
+    const datestring = delivertdate.format('dddd, MMMM D');
+
+    //delivery shipping cost
+    const shippingCost = deliveryOptions.priceCents === 0
+    ? ${}
+
+    html +=`
+      <div class="delivery-option">
+        <input type="radio"
+          class="delivery-option-input"
+          name="delivery-option-${matchgItem.id}">
+        <div>
+          <div class="delivery-option-date">
+            ${datestring}
+          </div>
+          <div class="delivery-option-price">
+            $9.99 - Shipping
+          </div>
+        </div>
+      </div>
+    `
+  });
+  
+}
 
 document.querySelector('.js-order-summary').innerHTML=selectItems;
 

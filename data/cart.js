@@ -1,11 +1,14 @@
+
 export let cart = JSON.parse(localStorage.getItem('cart')) 
 if(!cart){
   cart = [{
   prodectId : '83d4ca15-0f35-48f5-b7a3-1ea210004f2e',
-  quantity :1
+  quantity : 1,
+  deliveryOptionId : '1',
 },{
   prodectId : '54e0eccd-8f36-462b-b68a-8182611d9add',
-  quantity : 3
+  quantity : 3,
+  deliveryOptionId : '2'
 }];
 }
 
@@ -31,7 +34,8 @@ export function addItem(prodectId){
   }else{
     cart.push({
       prodectId,
-      quantity:quantity
+      quantity:quantity,
+      deliveryOptionId : '1'
     });
   };
   saveToStorage();
