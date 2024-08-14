@@ -2,7 +2,7 @@ import { cart, removeFromcart, calculateCartQuantity, updateQuantity} from "../d
 import { products,getProduct } from "../data/products.js";
 import { fixed } from "./utlity/many.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { deliveryOptions } from "../data/deliveryoption.js";
+import { deliveryOptions,getDeliveryOption } from "../data/deliveryoption.js";
 
 let selectItems = '';
 
@@ -12,11 +12,11 @@ cart.forEach((item) => {
   const matchgItem = getProduct(productId);
   
   const deliveryOptionId = item.deliveryOptionId;
-  const deliveryOption = 
+  const deliveryOption = getDeliveryOption(deliveryOptionId);
 
   const today =dayjs();
   const delivertdate = today.add(
-    deliveryOptionId.deliveryDays || [0], 'days');
+    deliveryOption.deliveryDays, 'days');
   const datestring = delivertdate.format('dddd, MMMM D');
 
   selectItems +=`
