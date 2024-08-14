@@ -101,7 +101,6 @@ export function renderOrderSummary(){
 
       //delivery cheked
       const isCheked = deliveryItem.id === item.deliveryOptionId;
-      console.log(deliveryItem.id);
 
       html +=`
         <div class="delivery-option js-delivery-option"
