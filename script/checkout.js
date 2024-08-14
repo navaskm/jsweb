@@ -1,5 +1,5 @@
 import { cart, removeFromcart, calculateCartQuantity, updateQuantity} from "../data/cart.js";
-import { products } from "../data/products.js";
+import { products,getProduct } from "../data/products.js";
 import { fixed } from "./utlity/many.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions } from "../data/deliveryoption.js";
@@ -7,19 +7,23 @@ import { deliveryOptions } from "../data/deliveryoption.js";
 let selectItems = '';
 
 cart.forEach((item) => {
-  let matchgItem;
 
-  products.forEach((product)=>{
-    if(item.prodectId === product.id){
-      matchgItem=product
-    }
-  });
+  const productId = item.prodectId;
+  const matchgItem = getProduct(productId);
+  
+  const deliveryOptionId = item.deliveryOptionId;
+  const deliveryOption = 
+
+  const today =dayjs();
+  const delivertdate = today.add(
+    deliveryOptionId.deliveryDays || [0], 'days');
+  const datestring = delivertdate.format('dddd, MMMM D');
 
   selectItems +=`
   <div class="cart-item-container 
   js-cart-item-container-${matchgItem.id}">
     <div class="delivery-date">
-      Delivery date: Tuesday, June 21
+      Delivery date: ${datestring}
     </div>
 
     <div class="cart-item-details-grid">
@@ -66,69 +70,38 @@ cart.forEach((item) => {
         <div class="delivery-options-title">
           Choose a delivery option:
         </div>
-        <div class="delivery-option">
-          <input type="radio" checked
-            class="delivery-option-input"
-            name="delivery-option-${matchgItem.id}">
-          <div>
-            <div class="delivery-option-date">
-              Tuesday, June 21
-            </div>
-            <div class="delivery-option-price">
-              FREE Shipping
-            </div>
-          </div>
-        </div>
-        <div class="delivery-option">
-          <input type="radio"
-            class="delivery-option-input"
-            name="delivery-option-${matchgItem.id}">
-          <div>
-            <div class="delivery-option-date">
-              Wednesday, June 15
-            </div>
-            <div class="delivery-option-price">
-              $4.99 - Shipping
-            </div>
-          </div>
-        </div>
-        <div class="delivery-option">
-          <input type="radio"
-            class="delivery-option-input"
-            name="delivery-option-${matchgItem.id}">
-          <div>
-            <div class="delivery-option-date">
-              Monday, June 13
-            </div>
-            <div class="delivery-option-price">
-              $9.99 - Shipping
-            </div>
-          </div>
-        </div>
+
+        ${deliveryOptionHTML(matchgItem, item)};
+
       </div>
     </div>
   </div>
   `
 });
 
-function deliveryOptionHTML(){
+function deliveryOptionHTML(matchgItem, item){
 
   let html;
 
-  deliveryOptions.forEach((deliveryoption)=>{
+  deliveryOptions.forEach((deliveryItem)=>{
 
     //delivery date
     const today =dayjs();
-    const delivertdate = today.add(deliveryOptions.       deliveryDays);
+    const delivertdate = today.add(deliveryItem.       deliveryDays, 'days');
     const datestring = delivertdate.format('dddd, MMMM D');
 
     //delivery shipping cost
-    const shippingCost = deliveryOptions.priceCents === 0
-    ? ${}
+    const shippingCost = deliveryItem.priceCents === 0
+    ? 'FREE'
+    : `$${fixed(deliveryItem.priceCents)} -`;
+
+    //delivery cheked
+    const isCheked = deliveryItem.id === item.deliveryOptionId;
 
     html +=`
       <div class="delivery-option">
         <input type="radio"
+          ${isCheked ? 'checked' : ''}
           class="delivery-option-input"
           name="delivery-option-${matchgItem.id}">
         <div>
@@ -136,13 +109,13 @@ function deliveryOptionHTML(){
             ${datestring}
           </div>
           <div class="delivery-option-price">
-            $9.99 - Shipping
+            ${shippingCost} Shipping
           </div>
         </div>
       </div>
     `
   });
-  
+  return html;
 }
 
 document.querySelector('.js-order-summary').innerHTML=selectItems;
