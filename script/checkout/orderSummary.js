@@ -3,6 +3,7 @@ import { products,getProduct } from "../../data/products.js";
 import { fixed } from "../utlity/many.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions,getDeliveryOption } from "../../data/deliveryoption.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 //MAIN FUNCTON
 export function renderOrderSummary(){
@@ -139,6 +140,7 @@ export function renderOrderSummary(){
       container.remove();
 
       selectedItemsQuentity();
+      renderPaymentSummary();
     });
   });
 
@@ -193,6 +195,7 @@ export function renderOrderSummary(){
 
       //recursion
       renderOrderSummary();
+      renderPaymentSummary();
     });
   });
 
