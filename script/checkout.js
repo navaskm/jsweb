@@ -120,6 +120,7 @@ function deliveryOptionHTML(matchgItem, item){
 
 document.querySelector('.js-order-summary').innerHTML=selectItems;
 
+//delete button
 document.querySelectorAll('.js-delete-link').forEach((link)=>{
   link.addEventListener('click', ()=>{
     const itemId=link.dataset.deleteId;
@@ -136,10 +137,6 @@ document.querySelectorAll('.js-delete-link').forEach((link)=>{
 });
 
  function selectedItemsQuentity(){
- /* let selectItemsQuentity=0;
-  cart.forEach((item)=>{
-   selectItemsQuentity+=item.quantity;
-  });*/
 
   const selectItemsQuentity = calculateCartQuantity();
 
@@ -148,7 +145,7 @@ document.querySelectorAll('.js-delete-link').forEach((link)=>{
 };
 selectedItemsQuentity();
 
-//ggggggggggggggggggggggggggggggggggggggggggggggg
+//update button
 document.querySelectorAll('.js-update-link').forEach((link)=>{
   link.addEventListener('click', ()=>{
     const itemId=link.dataset.productId;
@@ -158,6 +155,7 @@ document.querySelectorAll('.js-update-link').forEach((link)=>{
   });
 });
 
+//save button
   document.querySelectorAll('.js-save-link').
   forEach((link)=>{
     link.addEventListener('click', ()=>{
