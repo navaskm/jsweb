@@ -2,11 +2,11 @@
 export let cart = JSON.parse(localStorage.getItem('cart')) 
 if(!cart){
   cart = [{
-  prodectId : '83d4ca15-0f35-48f5-b7a3-1ea210004f2e',
+  productId : '83d4ca15-0f35-48f5-b7a3-1ea210004f2e',
   quantity : 1,
   deliveryOptionId : '1'
 },{
-  prodectId : '54e0eccd-8f36-462b-b68a-8182611d9add',
+  productId : '54e0eccd-8f36-462b-b68a-8182611d9add',
   quantity : 3,
   deliveryOptionId : '2'
 }];
@@ -16,24 +16,28 @@ function saveToStorage(){
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-export function addItem(prodectId){
+export function addItem(productId,ten){
   let matchingItem;
 
   cart.forEach((item)=>{
-    if(prodectId === item.prodectId){
+    if(productId === item.productId){
       matchingItem=item;
     }
   });
 
-  const quantitySelector = document.querySelector(
-    `.js-quantity-selector-${prodectId}`);
-   const quantity =Number(quantitySelector.value);
+  let quantity = 1;
+
+  if(ten !== 10){
+    const quantitySelector = document.querySelector(
+      `.js-quantity-selector-${productId}`);
+    quantity =Number(quantitySelector.value);
+  }
 
   if(matchingItem){
     matchingItem.quantity += quantity;
   }else{
     cart.push({
-      prodectId,
+      productId,
       quantity:quantity,
       deliveryOptionId : '1'
     });
@@ -44,7 +48,7 @@ export function addItem(prodectId){
 export function removeFromcart(itemId){
   let newCart=[];
   cart.forEach((cartItem)=>{
-    if(itemId !== cartItem.prodectId){
+    if(itemId !== cartItem.productId){
       newCart.push(cartItem);
     } 
   });
@@ -68,7 +72,7 @@ export function updateQuantity(productId, newQuantity){
   cart.forEach((cartItem)=>{
 
     if(newQuantity>=0 && newQuantity<=100){
-      if(productId === cartItem.prodectId){
+      if(productId === cartItem.productId){
         matchgItem = cartItem;
       }
     }else{
@@ -85,7 +89,7 @@ export function updateDeliveryOption
   let matchingItem;
 
   cart.forEach((item)=>{
-    if(productId === item.prodectId){
+    if(productId === item.productId){
       matchingItem=item;
     }
   });

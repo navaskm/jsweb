@@ -1,9 +1,9 @@
 import { cart, removeFromcart, calculateCartQuantity, updateQuantity, updateDeliveryOption} from "../../data/cart.js";
-import { products,getProduct } from "../../data/products.js";
+import { getProduct } from "../../data/products.js";
 import { fixed } from "../utlity/many.js";
-import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { deliveryOptions,getDeliveryOption } from "../../data/deliveryoption.js";
+import { deliveryOptions,getDeliveryOption, calculateDeliveryDate } from "../../data/deliveryoption.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
+
 
 //MAIN FUNCTON
 export function renderOrderSummary(){
@@ -13,16 +13,13 @@ export function renderOrderSummary(){
   cart.forEach((item) => {
 
     // change heading date
-    const productId = item.prodectId;
+    const productId = item.productId;
     const matchgItem = getProduct(productId);
     
     const deliveryOptionId = item.deliveryOptionId;
     const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-    const today =dayjs();
-    const delivertdate = today.add(
-      deliveryOption.deliveryDays, 'days');
-    const datestring = delivertdate.format('dddd, MMMM D');
+    const datestring = calculateDeliveryDate(deliveryOption);
 
     selectItems +=`
     <div class="cart-item-container 
@@ -40,7 +37,7 @@ export function renderOrderSummary(){
             ${matchgItem.name}
           </div>
           <div class="product-price">
-            $${fixed(matchgItem.priceCents)}
+            ${matchgItem.getPrice()}
           </div>
           <div class="product-quantity">
             <span>
@@ -75,13 +72,14 @@ export function renderOrderSummary(){
           <div class="delivery-options-title">
             Choose a delivery option:
           </div>
-
-          ${deliveryOptionHTML(matchgItem, item)};
-
+          
+          <div
+          ${deliveryOptionHTML(matchgItem, item)}
+          
         </div>
       </div>
     </div>
-    `
+    `;
   });
 
   function deliveryOptionHTML(matchgItem, item){
@@ -91,9 +89,7 @@ export function renderOrderSummary(){
     deliveryOptions.forEach((deliveryItem)=>{
 
       //delivery date
-      const today =dayjs();
-      const delivertdate = today.add(deliveryItem.       deliveryDays, 'days');
-      const datestring = delivertdate.format('dddd, MMMM D');
+      const datestring = calculateDeliveryDate(deliveryItem);
 
       //delivery shipping cost
       const shippingCost = deliveryItem.priceCents === 0
@@ -120,10 +116,11 @@ export function renderOrderSummary(){
             </div>
           </div>
         </div>
+        
       `
     });
     return html;
-  }
+  };
 
   document.querySelector('.js-order-summary').innerHTML=selectItems;
 
@@ -131,15 +128,10 @@ export function renderOrderSummary(){
   document.querySelectorAll('.js-delete-link').forEach((link)=>{
     link.addEventListener('click', ()=>{
       const itemId=link.dataset.deleteId;
-      console.log(itemId);
       removeFromcart(itemId);
-
-      const container = document.querySelector(
-        `.js-cart-item-container-${itemId}`
-      );
-      container.remove();
-
       selectedItemsQuentity();
+
+      renderOrderSummary();
       renderPaymentSummary();
     });
   });
@@ -182,6 +174,7 @@ export function renderOrderSummary(){
         quantityLabel.innerHTML=newQuantity;
 
         selectedItemsQuentity();
+        renderPaymentSummary();
       });
     });
 
